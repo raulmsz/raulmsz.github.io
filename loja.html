@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShrimpMaster | Loja Especializada em Camarões</title>
+    <!-- Fontes e Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #e67e22;
+            --secondary: #2c3e50;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .cart-icon {
+            cursor: pointer;
+            position: relative;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--primary);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+        }
+
+        /* Layout Principal */
+        main {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            padding: 2rem 5%;
+            flex: 1;
+        }
+
+        /* Catálogo */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background-color: #ddd;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .product-info p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: auto;
+        }
+
+        .btn-add {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background: var(--primary);
+        }
+
+        /* Sidebar Carrinho */
+        .cart-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .cart-title {
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-info b { display: block; }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .qty-btn {
+            background: #eee;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cart-totals {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--light);
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .grand-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 10px;
+        }
+
+        /* Formas de Pagamento */
+        .payment-methods {
+            margin-top: 1.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn-checkout:hover {
+            opacity: 0.9;
+        }
+
+        /* Notificação */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: none;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+            .cart-sidebar { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>🍤 ShrimpMaster <span style="font-weight:300; color:white">Store</span></h1>
+        </div>
+        <button class="cart-icon">
+            🛒 Carrinho
+            <span id="cart-count">0</span>
+        </button>
+    </header>
+
+    <main>
+        <!-- Seção de Produtos -->
+        <section>
+            <h2 style="margin-bottom: 1.5rem;">Nossa Seleção Premium</h2>
+            <div class="products-grid" id="products-grid">
+                <!-- Inserido via JS -->
+            </div>
+        </section>
+
+        <!-- Sidebar de Checkout -->
+        <aside class="cart-sidebar">
+            <div class="cart-title">
+                <h3>Resumo do Pedido</h3>
+            </div>
+            
+            <div class="cart-items" id="cart-items">
+                <p style="color:#999; text-align:center">Seu carrinho está vazio.</p>
+            </div>
+
+            <div class="cart-totals">
+                <div class="total-line">
+                    <span>Subtotal</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="total-line">
+                    <span>Entrega</span>
+                    <span id="delivery">R$ 15,00</span>
+                </div>
+                <div class="total-line grand-total">
+                    <span>Total</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="payment-methods">
+                <label>Forma de Pagamento:</label>
+                <select id="payment-method">
+                    <option value="pix">Pix (5% de Desconto)</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                    <option value="dinheiro">Dinheiro na Entrega</option>
+                </select>
+            </div>
+
+            <button class="btn-checkout" onclick="checkout()">FINALIZAR COMPRA</button>
+        </aside>
+    </main>
+
+    <div id="toast">Item adicionado com sucesso!</div>
+
+    <script>
+        // Dados dos Produtos
+        const products = [
+            { id: 1, name: "Camarão Rosa G", price: 89.90, desc: "Limpo e descascado, ideal para grelhados.", img: "https://images.unsplash.com/photo-1559742811-822873691df0?auto=format&fit=crop&w=300&q=80" },
+            { id: 2, name: "Camarão Pistola", price: 120.00, desc: "Tamanho gigante, perfeito para churrasco.", img: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=300&q=80" },
+            { id: 3, name: "Camarão Sete Barbas", price: 45.00, desc: "Ideal para risotos e molhos.", img: "https://images.unsplash.com/photo-1535400257038-5b0203e391b4?auto=format&fit=crop&w=300&q=80" },
+            { id: 4, name: "Camarão Empanado Panko", price: 65.00, desc: "Pronto para fritar, crocância máxima.", img: "https://images.unsplash.com/photo-1625943553852-781c6dd46faa?auto=format&fit=crop&w=300&q=80" },
+            { id: 5, name: "Mix de Frutos do Mar", price: 110.00, desc: "Camarão, lula e mexilhão selecionados.", img: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&w=300&q=80" },
+            { id: 6, name: "Camarão Cinza M", price: 59.90, desc: "Versátil para o dia a dia.", img: "https://images.unsplash.com/photo-1590577976322-3d2d6e213065?auto=format&fit=crop&w=300&q=80" },
+        ];
+
+        let cart = [];
+        const deliveryFee = 15.00;
+
+        // Inicializar Loja
+        function initStore() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img src="${p.img}" alt="${p.name}" class="product-image">
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="price">R$ ${p.price.toFixed(2).replace('.', ',')} /kg</div>
+                        <button class="btn-add" onclick="addToCart(${p.id})">
+                            Adicionar ao Carrinho
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funções do Carrinho
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            showToast();
+            updateCart();
+        }
+
+        function changeQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p style="color:#999; text-align:center">Seu carrinho está vazio.</p>';
+                cartCount.innerText = '0';
+                document.getElementById('subtotal').innerText = 'R$ 0,00';
+                document.getElementById('total').innerText = 'R$ 0,00';
+                return;
+            }
+
+            let subtotal = 0;
+            let totalItems = 0;
+
+            cartContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                totalItems += item.quantity;
+                
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <b>${item.name}</b>
+                            <span>R$ ${item.price.toFixed(2)}</span>
+                        </div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="changeQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            cartCount.innerText = totalItems;
+            document.getElementById('subtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            
+            const total = subtotal + deliveryFee;
+            document.getElementById('total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+
+            const payment = document.getElementById('payment-method').value;
+            const total = document.getElementById('total').innerText;
+            
+            alert(`
+                Pedido Recebido com Sucesso! 🦐
+                
+                Total: ${total}
+                Forma de Pagamento: ${payment.toUpperCase()}
+                Status: Aguardando Preparação
+                
+                Obrigado por comprar na ShrimpMaster!
+            `);
+
+            cart = [];
+            updateCart();
+        }
+
+        // Iniciar
+        initStore();
+    </script>
+</body>
+</html>
